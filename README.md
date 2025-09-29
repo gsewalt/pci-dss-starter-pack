@@ -2,166 +2,121 @@
 
 ## 📌 What is PCI-DSS?
 
-The **Payment Card Industry Data Security Standard (PCI-DSS)** is the global benchmark for protecting payment card data. If your organization handles credit card information in any way — storing, processing, or transmitting — PCI-DSS applies.
+The **Payment Card Industry Data Security Standard (PCI-DSS)** is the global benchmark for protecting payment card data. It applies to any organization handling credit card information — storing, processing, or transmitting.
 
-It consists of **12 major requirements**, covering everything from access control and authentication to logging, encryption, and vulnerability management. Think of it as the security checklist designed to **stop attackers from stealing cardholder data before it leaves your network**.
+It consists of **12 major requirements**, covering access control, authentication, logging, encryption, and vulnerability management.
 
 ---
 
-## 💡 Ok, but why does it matter?
+## 💡 Why does it matter?
 
-PCI-DSS isn’t just a bureaucratic checkbox — it has real-world consequences:
+PCI-DSS isn’t just bureaucracy — it has real-world consequences:
 
 * **Legal & contractual obligations:** Non-compliance can result in fines, lost merchant privileges, and higher transaction fees.
-* **Security first:** Most PCI-DSS controls map directly to common attack vectors like weak passwords, unpatched software, or misconfigured services.
-* **Operational hygiene:** PCI-DSS encourages a culture of continuous monitoring, auditing, and process discipline.
+* **Security first:** Most PCI-DSS controls map to common attack vectors like weak passwords, unpatched software, or misconfigured services.
+* **Operational hygiene:** PCI-DSS promotes continuous monitoring, auditing, and disciplined processes.
 
-**Bottom line:** PCI-DSS compliance is your safety net — it doesn’t guarantee zero breaches, but it drastically reduces risk.
+**Bottom line:** PCI-DSS compliance reduces risk and strengthens security posture.
 
 ---
 
-## 🛠️ My Approach
+## 🛠️ Our Approach
 
-Rather than trying to tackle every obscure sub-requirement, this project takes an **80/20 approach**:
+This project implements an **80/20 approach**, focusing on the **Top 10 most impactful, commonly overlooked PCI-DSS controls** for Windows 10:
 
-* **Prioritized controls:** Focus on the **Top 10 most impactful and frequently overlooked PCI-DSS controls**.
-* **Automation-first:** Remediate via **PowerShell scripts** that:
-
-  1. Check if the control is already in place.
-  2. Remediate if it’s not compliant.
-  3. Confirm implementation and log the result.
-* **Scalable & repeatable:** Scripts can run locally, through GPO, Intune, Azure Automation, or in CI/CD pipelines.
-* **Audit-friendly:** Each control maps directly to its PCI requirement ID, producing a clear compliance trail.
-
-**The result:** organizations can cover the most critical PCI-DSS requirements with minimal overhead, reducing audit headaches while maximizing security impact.
+* **Automation-first:** PowerShell scripts check, remediate, and confirm compliance.
+* **Idempotent & safe:** Scripts can run multiple times without adverse effects.
+* **Audit-friendly:** Each remediation outputs clear confirmation messages for compliance evidence.
+* **Plug-and-play:** No system-specific modifications required; works on any Windows 10 machine.
 
 ---
 
 ## 🔟 The Top 10 Controls
 
-### 1. Password & Account Policy Enforcement *(Req. 8.2, 8.3)*
+1. **Password & Account Policy Enforcement** *(Req. 8.2, 8.3)*
 
-**Why it matters:** Weak passwords remain a top cause of breaches. Attackers will brute-force or exploit stale accounts to gain access.
-**How we help:**
+   * Minimum 12-character passwords, max age 90 days, history 10.
+   * Confirmation message at completion.
 
-* Enforce minimum 12-character, complex passwords.
-* Lock accounts after 5 failed attempts.
-* Automatically alert on misconfigured policies.
+2. **Disable Local Administrator Account** *(Req. 2.2.4, 8.1.4)*
 
-### 2. Disable Default & Dormant Accounts *(Req. 2.2.4, 8.1.4)*
+   * Reduces attack surface.
+   * Automatic disable with confirmation.
 
-**Why it matters:** Default or orphaned accounts are a hacker’s easiest entry point.
-**How we help:**
+3. **Disable Windows PowerShell 2.0**
 
-* Detect inactive or unused accounts and disable them.
-* Rename default “Administrator” accounts to prevent guessing attacks.
+   * Removes legacy vulnerable components.
+   * Confirmation displayed after disabling.
 
-### 3. Audit Logging Enabled & Centralized *(Req. 10.1–10.6)*
+4. **Remove Guest Account**
 
-**Why it matters:** Logs are your eyes and ears. Without them, security incidents go unnoticed, and post-incident investigations are nearly impossible.
-**How we help:**
+   * Prevents anonymous access.
+   * Confirms whether Guest was disabled or already inactive.
 
-* Enable critical audit categories: login attempts, account changes, and policy modifications.
-* Forward logs to a SIEM or centralized log collector for continuous monitoring.
-* Confirm compliance and generate evidence for auditors automatically.
+5. **File Integrity Monitoring Baseline** *(Req. 11.5)*
 
-### 4. Time Synchronization *(Req. 10.4)*
+   * Hashes and tracks critical system files.
+   * Baseline hashes logged with confirmation.
 
-**Why it matters:** Misaligned timestamps make logs unreliable. You can’t prove sequence of events without consistent time across systems.
-**How we help:**
+6. **Disable LM & NTLMv1 Authentication**
 
-* Force NTP synchronization against a trusted source.
-* Check drift and alert if it exceeds acceptable thresholds.
+   * Enforces secure authentication protocols.
+   * Registry changes applied with confirmation.
 
-### 5. File Integrity Monitoring (FIM) *(Req. 11.5)*
+7. **Disable Legacy SSL/TLS Protocols** *(Req. 4.1)*
 
-**Why it matters:** Unauthorized changes to critical files or registry keys are often the first sign of compromise.
-**How we help:**
+   * Disables SSLv2, SSLv3, TLS 1.0, TLS 1.1.
+   * Confirmation after all protocols disabled.
 
-* Hash and baseline important files (e.g., web.config, system configs).
-* Detect changes in real-time and alert via console or SIEM.
-* Confirm integrity post-remediation.
+8. **Windows Defender Real-Time Protection**
 
-### 6. Service Hardening *(Req. 2.2.2, 2.2.3)*
+   * Ensures anti-malware protection is enabled.
+   * Confirmation provided; manual Tamper Protection verification noted.
 
-**Why it matters:** Unnecessary services (Telnet, SMBv1, SNMP) are low-hanging fruit for attackers.
-**How we help:**
+9. **Account Lockout Policy Enforcement** *(Req. 8.1.6)*
 
-* Detect and disable high-risk or unused services.
-* Ensure systems conform to a secure baseline.
-* Confirm service status automatically.
+   * Lockout threshold 10, duration 15 min, window 15 min.
+   * Blank passwords disabled.
+   * Confirmation logged at end.
 
-### 7. Encryption & Protocol Hardening *(Req. 2.2.3, 4.1)*
+10. **Audit Logging Enforcement** *(Req. 10.1–10.6)*
 
-**Why it matters:** Legacy protocols like SSLv2/3 or weak TLS ciphers leave data exposed to interception.
-**How we help:**
-
-* Disable SSLv2, SSLv3, TLS 1.0/1.1.
-* Enforce TLS 1.2+ across all systems.
-* Verify compliance post-change.
-
-### 8. Least Privilege & Role Review *(Req. 7.1, 7.2)*
-
-**Why it matters:** Over-privileged accounts are a hacker’s shortcut to full domain compromise.
-**How we help:**
-
-* Audit local and domain admin groups.
-* Remove unauthorized users automatically.
-* Confirm only approved accounts retain elevated privileges.
-
-### 9. Patch & Vulnerability Baseline *(Req. 6.2)*
-
-**Why it matters:** Unpatched software is still the #1 attack vector.
-**How we help:**
-
-* Identify missing patches.
-* Automate patch installation via PowerShell.
-* Confirm post-patch compliance.
-
-### 10. Secure Configuration Baselines *(Req. 2.2, 2.2.1)*
-
-**Why it matters:** Misconfigured systems can silently leak sensitive data.
-**How we help:**
-
-* Enforce registry and OS-level configurations for RDP, firewall, crypto, etc.
-* Apply CIS/PCI hardening templates consistently.
-* Confirm compliance automatically.
+    * Enables logon/logoff and object access auditing.
+    * Confirmation displayed; Security log retention requires manual verification.
 
 ---
 
 ## ⚙️ How It Works
 
-All scripts follow the **Check → Remediate → Confirm** model:
+Scripts follow a **Check → Remediate → Confirm** model:
 
-1. **Check:** Is the control already in place?
-2. **Remediate:** Apply the correct configuration if it’s not.
-3. **Confirm:** Verify changes and log results.
+1. **Check:** Is the control already compliant?
+2. **Remediate:** Apply the correct configuration.
+3. **Confirm:** Log results in sequential confirmation messages.
+
+All messages are displayed **together at the end** for easy review.
 
 Example output:
 
 ```plaintext
-[PCI] Password policy already compliant.
-[PCI] Disabled 3 inactive accounts.
-[PCI] ALERT: web.config modified!
+1) Password policy enforced: Minimum 12 chars, max age 90 days, history 10.
+2) Administrator account disabled.
+3) Windows PowerShell 2.0 disabled.
+...
+10) Audit logging enabled for Logon/Logoff and Object Access.
 ```
-
-* Idempotent: safe to run multiple times.
-* Audit-friendly: outputs can be saved to CSV, JSON, or EventLog.
 
 ---
 
 ## 📂 Repo Structure
 
 ```
-PCI-DSS-Automation/
+PCI-DSS-PowerShell-Remediations/
 │
 ├── README.md
-├── modules/
-│   └── PCI-Remediate.psm1
 ├── scripts/
-│   └── Run-PCI.ps1
-└── reports/
-    └── sample-output.log
+│   └── PCI-DSS-Top10-Remediation.ps1
+└── LICENSE
 ```
 
 ---
@@ -171,23 +126,17 @@ PCI-DSS-Automation/
 1. Clone the repo:
 
 ```bash
-git clone https://github.com/yourorg/pci-dss-automation.git
-cd pci-dss-automation
+git clone https://github.com/yourorg/pci-dss-powershell.git
+cd pci-dss-powershell
 ```
 
-2. Run individual scripts:
+2. Run the composite script:
 
 ```powershell
-.\scripts\Run-PCI.ps1
+.\scripts\PCI-DSS-Top10-Remediation.ps1
 ```
 
-3. Or run the unified module:
-
-```powershell
-Import-Module .\modules\PCI-Remediate.psm1
-Invoke-PCIControl -All
-Invoke-PCIControl -Control Logging,Patching
-```
+3. Review the **sequential confirmation messages** at the bottom of the output.
 
 ---
 
@@ -196,12 +145,25 @@ Invoke-PCIControl -Control Logging,Patching
 * Add Linux / Unix equivalents (Bash / Ansible).
 * Create Azure-native automation templates.
 * Export audit-ready compliance reports (JSON/CSV).
-* Integrate with SIEM/SOAR workflows for real-time monitoring.
+* Integrate with SIEM/SOAR workflows.
 
 ---
 
 ## ⚠️ Disclaimer
 
-This project **does not guarantee PCI-DSS compliance**. It provides automation for **high-value, frequently audited controls**, giving organizations a **head start in securing cardholder data**. Always validate with your QSA and tailor scripts to your environment.
+This project **does not guarantee PCI-DSS compliance**. It automates **high-value, frequently audited controls** for Windows 10 systems. Always validate with your QSA and tailor scripts to your environment.
 
+---
 
+## License
+© 2025 Gregory Sewalt. All rights reserved.
+
+Permission is granted to any person or entity (“Licensee”) to use, copy, modify, merge, publish, distribute, and sublicense
+this software (the “Software”), subject to the following:
+
+1. **No Compliance Warranty:** Use of this Software does NOT guarantee PCI-DSS or other regulatory compliance. Licensee assumes all risk.
+2. **“As-Is” Disclaimer:** The Software is provided without warranty of any kind, express or implied, including merchantability, fitness, or non-infringement.
+3. **Attribution:** This copyright notice and disclaimer must remain with all copies or substantial portions of the Software.
+4. **Indemnification:** Licensee shall hold harmless Gregory Sewalt from any claims, losses, or damages arising from use.
+
+By using, copying, or distributing the Software, Licensee agrees to these terms.

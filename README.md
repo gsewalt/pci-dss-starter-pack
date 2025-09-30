@@ -1,4 +1,5 @@
 # PCI-DSS Automation Starter Pack 🚀
+
 [Composite Script Download](scripts/PCI-DSS_Top10-Remediation.ps1)
 
 ## 📌 What is PCI-DSS?
@@ -32,58 +33,57 @@ This project implements an **80/20 approach**, focusing on the **Top 10 most imp
 
 ---
 
-## 🔟 The Top 10 Controls
+## 🔟 The Top 10 Controls (what each script does + PCI requirement)
 
-1. **Password & Account Policy Enforcement**  
-   *PCI-DSS Req. 8.2, 8.3 (Authentication & password controls)*  
-   * Minimum 12-character passwords, max age 90 days, history 10.  
-   * Confirmation message at completion.  
+1. **Password & Account Policy Enforcement**
+   *Script:* `scripts/01-PasswordPolicy.ps1` — **Download**: [01-PasswordPolicy.ps1](scripts/01-PasswordPolicy.ps1)
+   *What it does:* Enforces minimum 12-character passwords, max age 90 days, password history.
+   *PCI-DSS:* Req. 8.2, 8.3 (Authentication and account policies)
 
-2. **Disable Local Administrator Account**  
-   *PCI-DSS Req. 2.2.4, 8.1.4 (Remove/disable default & orphan accounts)*  
-   * Reduces attack surface.  
-   * Automatic disable with confirmation.  
+2. **Disable Local Administrator Account**
+   *Script:* `scripts/02-DisableAdminAccount.ps1` — **Download**: [02-DisableAdminAccount.ps1](scripts/02-DisableAdminAccount.ps1)
+   *What it does:* Safely disables built-in Administrator and inactive local accounts.
+   *PCI-DSS:* Req. 2.2.4, 8.1.4 (Remove/disable default & orphan accounts)
 
-3. **Disable Windows PowerShell 2.0**  
-   *PCI-DSS Req. 2.2, 6.1 (Secure config / vulnerability management)*  
-   * Removes legacy vulnerable components.  
-   * Confirmation displayed after disabling.  
+3. **Disable Windows PowerShell 2.0**
+   *Script:* `scripts/03-DisablePS2.ps1` — **Download**: [03-DisablePS2.ps1](scripts/03-DisablePS2.ps1)
+   *What it does:* Disables legacy PowerShell v2 optional feature to remove vulnerable components.
+   *PCI-DSS:* Req. 2.2, 6.1 (Secure configuration / vulnerability exposure)
 
-4. **Remove Guest Account**  
-   *PCI-DSS Req. 8.1.4 (Account management)*  
-   * Prevents anonymous access.  
-   * Confirms whether Guest was disabled or already inactive.  
+4. **Remove Guest Account**
+   *Script:* `scripts/04-RemoveGuest.ps1` — **Download**: [04-RemoveGuest.ps1](scripts/04-RemoveGuest.ps1)
+   *What it does:* Disables the built-in Guest account to prevent anonymous access.
+   *PCI-DSS:* Req. 8.1.4 (Account management)
 
-5. **File Integrity Monitoring Baseline**  
-   *PCI-DSS Req. 11.5 (File integrity monitoring)*  
-   * Hashes and tracks critical system files.  
-   * Baseline hashes logged with confirmation.  
+5. **File Integrity Monitoring Baseline**
+   *Script:* `scripts/05-FileIntegrity.ps1` — **Download**: [05-FileIntegrity.ps1](scripts/05-FileIntegrity.ps1)
+   *What it does:* Generates SHA256 baseline hashes for readable critical files (FIM baseline).
+   *PCI-DSS:* Req. 11.5 (File integrity monitoring)
 
-6. **Disable LM & NTLMv1 Authentication**  
-   *PCI-DSS Req. 8.1, 2.2 (Authentication hardening / secure config)*  
-   * Enforces secure authentication protocols.  
-   * Registry changes applied with confirmation.  
+6. **Disable LM & NTLMv1 Authentication**
+   *Script:* `scripts/06-DisableLMNTLMv1.ps1` — **Download**: [06-DisableLMNTLMv1.ps1](scripts/06-DisableLMNTLMv1.ps1)
+   *What it does:* Sets registry to enforce LmCompatibilityLevel and disable NTLMv1.
+   *PCI-DSS:* Req. 8.1, 2.2 (Authentication hardening / secure configuration)
 
-7. **Disable Legacy SSL/TLS Protocols**  
-   *PCI-DSS Req. 2.2.3, 4.1 (Secure configuration / strong crypto in transit)*  
-   * Disables SSLv2, SSLv3, TLS 1.0, TLS 1.1.  
-   * Confirmation after all protocols disabled.  
+7. **Disable Legacy SSL/TLS Protocols**
+   *Script:* `scripts/07-DisableLegacyTLS.ps1` — **Download**: [07-DisableLegacyTLS.ps1](scripts/07-DisableLegacyTLS.ps1)
+   *What it does:* Disables SSLv2, SSLv3, TLS 1.0 and TLS 1.1 in SCHANNEL for client & server.
+   *PCI-DSS:* Req. 4.1, 2.2.3 (Strong encryption in transit / secure configuration)
 
-8. **Windows Defender Real-Time Protection**  
-   *PCI-DSS Req. 5.1 (Anti-malware)*  
-   * Ensures anti-malware protection is enabled.  
-   * Confirmation provided; manual Tamper Protection verification noted.  
+8. **Windows Defender Real-Time Protection**
+   *Script:* `scripts/08-WDRealTime.ps1` — **Download**: [08-WDRealTime.ps1](scripts/08-WDRealTime.ps1)
+   *What it does:* Enables Windows Defender real-time scanning (Tamper Protection must be verified manually).
+   *PCI-DSS:* Req. 5.1 (Anti-malware)
 
-9. **Account Lockout Policy Enforcement**  
-   *PCI-DSS Req. 8.1.6 (Brute-force protection / account lockout)*  
-   * Lockout threshold 10, duration 15 min, window 15 min.  
-   * Blank passwords disabled.  
-   * Confirmation logged at end.  
+9. **Account Lockout Policy Enforcement**
+   *Script:* `scripts/09-AccountLockout.ps1` — **Download**: [09-AccountLockout.ps1](scripts/09-AccountLockout.ps1)
+   *What it does:* Enforces lockout threshold (10), duration (15 min), observation window (15 min) and disables blank passwords.
+   *PCI-DSS:* Req. 8.1.6 (Brute-force protection / account lockout)
 
-10. **Audit Logging Enforcement**  
-    *PCI-DSS Req. 10.1–10.6 (Logging and monitoring)*  
-    * Enables logon/logoff and object access auditing.  
-    * Confirmation displayed; Security log retention requires manual verification.  
+10. **Audit Logging Enforcement**
+    *Script:* `scripts/10-AuditLogging.ps1` — **Download**: [10-AuditLogging.ps1](scripts/10-AuditLogging.ps1)
+    *What it does:* Enables logon/logoff and object access auditing via `auditpol`.
+    *PCI-DSS:* Req. 10.1–10.6 (Logging, monitoring, and retention)
 
 ---
 
@@ -105,3 +105,61 @@ Example output:
 3) Windows PowerShell 2.0 disabled.
 ...
 10) Audit logging enabled for Logon/Logoff and Object Access.
+```
+
+---
+
+## 📂 Repo Structure
+
+```
+PCI-DSS-PowerShell-Remediations/
+│
+├── README.md
+├── scripts/
+│   └── PCI-DSS-Top10-Remediation.ps1
+```
+
+---
+
+## 🚀 To use:
+
+1. Download and run the [starter pack composite script.](scripts/PCI-DSS_Top10-Remediation.ps1)
+
+```powershell
+.\scripts\PCI-DSS-Top10-Remediation.ps1
+```
+
+2. Or run individual scripts from the table above by clicking the respective download links.
+3. Review the **sequential confirmation messages** at the bottom of the output.
+
+---
+
+## 📈 Roadmap
+
+* Add Linux / Unix equivalents (Bash / Ansible).
+* Create Azure-native automation templates.
+* Export audit-ready compliance reports (JSON/CSV).
+* Integrate with SIEM/SOAR workflows.
+
+---
+
+## ⚠️ Disclaimer
+
+This project **does not guarantee PCI-DSS compliance**. It automates **high-value, frequently audited controls** for Windows 10 systems. Always validate with your QSA and tailor scripts to your environment.
+
+---
+
+## License
+
+© 2025 Gregory Sewalt. All rights reserved.
+
+Permission is granted to any person or entity (“Licensee”) to use, copy, modify, merge, publish, distribute, and sublicense
+this software (the “Software”), subject to the following:
+
+1. **No Compliance Warranty:** Use of this Software does NOT guarantee PCI-DSS or other regulatory compliance. Licensee assumes all risk.
+2. **“As-Is” Disclaimer:** The Software is provided without warranty of any kind, express or implied, including merchantability, fitness, or non-infringement.
+3. **Attribution:** This copyright notice and disclaimer must remain with all copies or substantial portions of the Software.
+4. **Indemnification:** Licensee shall hold harmless Gregory Sewalt from any claims, losses, or damages arising from use.
+
+By using, copying, or distributing the Software, Licensee agrees to these terms.
+

@@ -34,56 +34,56 @@ This project implements an **80/20 approach**, focusing on the **Top 10 most imp
 
 ## 🔟 The Top 10 Controls
 
-1. **Password & Account Policy Enforcement** *(Req. 8.2, 8.3)*
+1. **Password & Account Policy Enforcement**  
+   *PCI-DSS Req. 8.2, 8.3 (Authentication & password controls)*  
+   * Minimum 12-character passwords, max age 90 days, history 10.  
+   * Confirmation message at completion.  
 
-   * Minimum 12-character passwords, max age 90 days, history 10.
-   * Confirmation message at completion.
+2. **Disable Local Administrator Account**  
+   *PCI-DSS Req. 2.2.4, 8.1.4 (Remove/disable default & orphan accounts)*  
+   * Reduces attack surface.  
+   * Automatic disable with confirmation.  
 
-2. **Disable Local Administrator Account** *(Req. 2.2.4, 8.1.4)*
+3. **Disable Windows PowerShell 2.0**  
+   *PCI-DSS Req. 2.2, 6.1 (Secure config / vulnerability management)*  
+   * Removes legacy vulnerable components.  
+   * Confirmation displayed after disabling.  
 
-   * Reduces attack surface.
-   * Automatic disable with confirmation.
+4. **Remove Guest Account**  
+   *PCI-DSS Req. 8.1.4 (Account management)*  
+   * Prevents anonymous access.  
+   * Confirms whether Guest was disabled or already inactive.  
 
-3. **Disable Windows PowerShell 2.0**
+5. **File Integrity Monitoring Baseline**  
+   *PCI-DSS Req. 11.5 (File integrity monitoring)*  
+   * Hashes and tracks critical system files.  
+   * Baseline hashes logged with confirmation.  
 
-   * Removes legacy vulnerable components.
-   * Confirmation displayed after disabling.
+6. **Disable LM & NTLMv1 Authentication**  
+   *PCI-DSS Req. 8.1, 2.2 (Authentication hardening / secure config)*  
+   * Enforces secure authentication protocols.  
+   * Registry changes applied with confirmation.  
 
-4. **Remove Guest Account**
+7. **Disable Legacy SSL/TLS Protocols**  
+   *PCI-DSS Req. 2.2.3, 4.1 (Secure configuration / strong crypto in transit)*  
+   * Disables SSLv2, SSLv3, TLS 1.0, TLS 1.1.  
+   * Confirmation after all protocols disabled.  
 
-   * Prevents anonymous access.
-   * Confirms whether Guest was disabled or already inactive.
+8. **Windows Defender Real-Time Protection**  
+   *PCI-DSS Req. 5.1 (Anti-malware)*  
+   * Ensures anti-malware protection is enabled.  
+   * Confirmation provided; manual Tamper Protection verification noted.  
 
-5. **File Integrity Monitoring Baseline** *(Req. 11.5)*
+9. **Account Lockout Policy Enforcement**  
+   *PCI-DSS Req. 8.1.6 (Brute-force protection / account lockout)*  
+   * Lockout threshold 10, duration 15 min, window 15 min.  
+   * Blank passwords disabled.  
+   * Confirmation logged at end.  
 
-   * Hashes and tracks critical system files.
-   * Baseline hashes logged with confirmation.
-
-6. **Disable LM & NTLMv1 Authentication**
-
-   * Enforces secure authentication protocols.
-   * Registry changes applied with confirmation.
-
-7. **Disable Legacy SSL/TLS Protocols** *(Req. 4.1)*
-
-   * Disables SSLv2, SSLv3, TLS 1.0, TLS 1.1.
-   * Confirmation after all protocols disabled.
-
-8. **Windows Defender Real-Time Protection**
-
-   * Ensures anti-malware protection is enabled.
-   * Confirmation provided; manual Tamper Protection verification noted.
-
-9. **Account Lockout Policy Enforcement** *(Req. 8.1.6)*
-
-   * Lockout threshold 10, duration 15 min, window 15 min.
-   * Blank passwords disabled.
-   * Confirmation logged at end.
-
-10. **Audit Logging Enforcement** *(Req. 10.1–10.6)*
-
-    * Enables logon/logoff and object access auditing.
-    * Confirmation displayed; Security log retention requires manual verification.
+10. **Audit Logging Enforcement**  
+    *PCI-DSS Req. 10.1–10.6 (Logging and monitoring)*  
+    * Enables logon/logoff and object access auditing.  
+    * Confirmation displayed; Security log retention requires manual verification.  
 
 ---
 
@@ -105,74 +105,3 @@ Example output:
 3) Windows PowerShell 2.0 disabled.
 ...
 10) Audit logging enabled for Logon/Logoff and Object Access.
-```
-
----
-
-## 📂 Repo Structure
-
-```
-PCI-DSS-PowerShell-Remediations/
-│
-├── README.md
-├── scripts/
-│   └── PCI-DSS-Top10-Remediation.ps1
-```
-
----
-
-## 🚀 To use:
-
-1. Download and run the [starter pack composite script.](scripts/PCI-DSS_Top10-Remediation.ps1)
-```powershell
-.\scripts\PCI-DSS-Top10-Remediation.ps1
-```
-2. Alternatively, download individual script as needed from the table below and run separately:
-3. ### Downloadable scripts (individual)
-
-### Downloadable scripts (individual)
-
-| Description | PCI-DSS requirement(s) | Download |
-|---|---|---|
-| Enforce local password policy (min length 12, max age 90d, history) | Req. 8.2, 8.3 (Authentication & password controls) | [Download](scripts/01-PasswordPolicy.ps1) |
-| Safely disable default/local Administrator and inactive local accounts | Req. 2.2.4, 8.1.4 (Remove/disable default & orphan accounts) | [Download](scripts/02-DisableAdminAccount.ps1) |
-| Disable Windows PowerShell 2.0 optional feature (remove legacy component) | Req. 2.2 / Req. 6.1 (Secure config / vulnerability exposure) | [Download](scripts/03-DisablePS2.ps1) |
-| Disable the built-in Guest account to prevent anonymous access | Req. 8.1.4 (Account management) | [Download](scripts/04-RemoveGuest.ps1) |
-| Generate/readable baseline SHA256 hashes for critical files (FIM baseline) | Req. 11.5 (File integrity monitoring) | [Download](scripts/05-FileIntegrity.ps1) |
-| Enforce LmCompatibilityLevel / disable LM & NTLMv1 (legacy auth) | Req. 8.1 / Req. 2.2 (Authentication hardening / secure config) | [Download](scripts/06-DisableLMNTLMv1.ps1) |
-| Disable SSLv2, SSLv3, TLS1.0 and TLS1.1 (SCHANNEL registry hardening) | Req. 2.2.3, 4.1 (Secure configuration / strong crypto in transit) | [Download](scripts/07-DisableLegacyTLS.ps1) |
-| Enable Windows Defender real-time scanning (note: Tamper Protection must be verified manually) | Req. 5.1 (Anti-malware) | [Download](scripts/08-WDRealTime.ps1) |
-| Enforce account lockout policy (threshold, duration, observation window) | Req. 8.1.6 (Brute-force protection / account lockout) | [Download](scripts/09-AccountLockout.ps1) |
-| Enable Logon/Logoff and Object Access auditing (auditpol) | Req. 10.1–10.6 (Logging and monitoring) | [Download](scripts/10-AuditLogging.ps1) |
-
-4. Review the **sequential confirmation messages** at the bottom of the output.
-
----
-
-## 📈 Roadmap
-
-* Add Linux / Unix equivalents (Bash / Ansible).
-* Create Azure-native automation templates.
-* Export audit-ready compliance reports (JSON/CSV).
-* Integrate with SIEM/SOAR workflows.
-
----
-
-## ⚠️ Disclaimer
-
-This project **does not guarantee PCI-DSS compliance**. It automates **high-value, frequently audited controls** for Windows 10 systems. Always validate with your QSA and tailor scripts to your environment.
-
----
-
-## License
-© 2025 Gregory Sewalt. All rights reserved.
-
-Permission is granted to any person or entity (“Licensee”) to use, copy, modify, merge, publish, distribute, and sublicense
-this software (the “Software”), subject to the following:
-
-1. **No Compliance Warranty:** Use of this Software does NOT guarantee PCI-DSS or other regulatory compliance. Licensee assumes all risk.
-2. **“As-Is” Disclaimer:** The Software is provided without warranty of any kind, express or implied, including merchantability, fitness, or non-infringement.
-3. **Attribution:** This copyright notice and disclaimer must remain with all copies or substantial portions of the Software.
-4. **Indemnification:** Licensee shall hold harmless Gregory Sewalt from any claims, losses, or damages arising from use.
-
-By using, copying, or distributing the Software, Licensee agrees to these terms.

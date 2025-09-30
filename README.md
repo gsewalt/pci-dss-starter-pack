@@ -1,4 +1,5 @@
 # PCI-DSS Automation Starter Pack 🚀
+[Composite Script Download](scripts/PCI-DSS_Top10-Remediation.ps1)
 
 ## 📌 What is PCI-DSS?
 
@@ -116,27 +117,35 @@ PCI-DSS-PowerShell-Remediations/
 ├── README.md
 ├── scripts/
 │   └── PCI-DSS-Top10-Remediation.ps1
-└── LICENSE
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 To use:
 
-1. Clone the repo:
-
-```bash
-git clone https://github.com/yourorg/pci-dss-powershell.git
-cd pci-dss-powershell
-```
-
-2. Run the composite script:
-
+1. Download and run the [starter pack composite script.](scripts/PCI-DSS_Top10-Remediation.ps1)
 ```powershell
 .\scripts\PCI-DSS-Top10-Remediation.ps1
 ```
+2. Alternatively, download individual script as needed from the table below and run separately:
+3. ### Downloadable scripts (individual)
 
-3. Review the **sequential confirmation messages** at the bottom of the output.
+### Downloadable scripts (individual)
+
+| Description | PCI-DSS requirement(s) | Download |
+|---|---|---|
+| Enforce local password policy (min length 12, max age 90d, history) | Req. 8.2, 8.3 (Authentication & password controls) | [Download](scripts/01-PasswordPolicy.ps1) |
+| Safely disable default/local Administrator and inactive local accounts | Req. 2.2.4, 8.1.4 (Remove/disable default & orphan accounts) | [Download](scripts/02-DisableAdminAccount.ps1) |
+| Disable Windows PowerShell 2.0 optional feature (remove legacy component) | Req. 2.2 / Req. 6.1 (Secure config / vulnerability exposure) | [Download](scripts/03-DisablePS2.ps1) |
+| Disable the built-in Guest account to prevent anonymous access | Req. 8.1.4 (Account management) | [Download](scripts/04-RemoveGuest.ps1) |
+| Generate/readable baseline SHA256 hashes for critical files (FIM baseline) | Req. 11.5 (File integrity monitoring) | [Download](scripts/05-FileIntegrity.ps1) |
+| Enforce LmCompatibilityLevel / disable LM & NTLMv1 (legacy auth) | Req. 8.1 / Req. 2.2 (Authentication hardening / secure config) | [Download](scripts/06-DisableLMNTLMv1.ps1) |
+| Disable SSLv2, SSLv3, TLS1.0 and TLS1.1 (SCHANNEL registry hardening) | Req. 2.2.3, 4.1 (Secure configuration / strong crypto in transit) | [Download](scripts/07-DisableLegacyTLS.ps1) |
+| Enable Windows Defender real-time scanning (note: Tamper Protection must be verified manually) | Req. 5.1 (Anti-malware) | [Download](scripts/08-WDRealTime.ps1) |
+| Enforce account lockout policy (threshold, duration, observation window) | Req. 8.1.6 (Brute-force protection / account lockout) | [Download](scripts/09-AccountLockout.ps1) |
+| Enable Logon/Logoff and Object Access auditing (auditpol) | Req. 10.1–10.6 (Logging and monitoring) | [Download](scripts/10-AuditLogging.ps1) |
+
+4. Review the **sequential confirmation messages** at the bottom of the output.
 
 ---
 
